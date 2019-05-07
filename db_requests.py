@@ -76,6 +76,12 @@ class DBRequests:
             self.cursor.execute(stmt)
             self.connection.commit()
 
+        stmt = sql.SQL("DELETE FROM {} WHERE c_no='{}';").format(
+            sql.Identifier('imagestorage'),
+            sql.SQL(str(task.image))
+        )
+        self.cursor.execute(stmt)
+        self.connection.commit()
         tables = ('persons_to_help', 'descriptions', 'helpers', 'code', 'images')
         for tab in tables:
             request(tab, task.id)
