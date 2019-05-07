@@ -52,7 +52,9 @@ def create_menu_keyboard(is_neady, is_helper):
     col2 = ('Помогите с задачей!', '') if not is_neady else ('Решилось само', '')
     keyboard.row(col1[0], col2[0], 'О боте')
     if col1[1] != '':
-        keyboard.row(col1[1])
+        keyboard.row(col1[1], 'Готовые проги')
+    else
+        keyboard.row('Готовые проги')
     return keyboard
 
 
@@ -71,7 +73,7 @@ def start(person_id, chat_id):
 
 def start_mes(message):
     # print(message)
-    delete_keyboard(message)
+    # delete_keyboard(message)
     start(message.chat.id, message.chat.id)
 
 
@@ -192,6 +194,13 @@ def text(message):
         Количество решаемых сейчас задач {}
         Количество оставшихся задач {}
         """.format(str(db.get_number_of_being_solved()), str(db.get_number_of_unsolved())))
+        bot.send_message(message.chat.id, 'Продолжаем',
+                         reply_markup=create_continue_menu())
+        bot.register_next_step_handler(message, start_mes)
+    elif message.text == 'Готовые проги':
+        bot.send_message(message.chat.id, """
+                Возможно, готовые задачи будут появляться здесь https://cloud.mail.ru/public/2vHt/3RRNy3nuz
+                """.format(str(db.get_number_of_being_solved()), str(db.get_number_of_unsolved())))
         bot.send_message(message.chat.id, 'Продолжаем',
                          reply_markup=create_continue_menu())
         bot.register_next_step_handler(message, start_mes)
