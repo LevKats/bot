@@ -53,7 +53,7 @@ def create_menu_keyboard(is_neady, is_helper):
     keyboard.row(col1[0], col2[0], 'О боте')
     if col1[1] != '':
         keyboard.row(col1[1], 'Готовые проги')
-    else
+    else:
         keyboard.row('Готовые проги')
     return keyboard
 
@@ -91,6 +91,10 @@ def get_task_id_func():
 
 
 def make_description(task, message):
+    if message.content_type != 'text':
+        bot.send_message(message.chat.id, "Опишите проблему")
+        bot.register_next_step_handler(message, partial(make_description, task))
+        return
     description = message.text
     bot.send_message(message.chat.id, "вставьте скриншот ошибки как картинку")
     bot.register_next_step_handler(message, partial(make_image, Task(
@@ -126,6 +130,10 @@ def make_image(task, message):
 
 
 def make_code(task, message):
+    if message.content_type != 'text':
+        bot.send_message(message.chat.id, "вставьте ссылку на https://pastebin.com/ с вашим кодом")
+        bot.register_next_step_handler(message, partial(make_code, task))
+        return
     code = message.text
     if re.match(r'^https://pastebin.com/\w+$', code) is None:
         bot.send_message(message.chat.id, "вставьте ссылку на https://pastebin.com/ с вашим кодом")
